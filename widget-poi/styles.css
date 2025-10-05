@@ -224,3 +224,12 @@ input[type="text"]{
 .categories input[value="pharmacy"] + span::before{ background:#a78bfa; }     /* Farmacias */
 .categories input[value="supermarket"] + span::before{ background:#34d399; }  /* Super/Tiendas */
 .categories input[value="bus_stop"] + span::before{ background:#2563eb; }
+
+.categories input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+.categories label span {
+  font-size: 14px;
+}
