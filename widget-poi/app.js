@@ -42,7 +42,9 @@
     const toRad = d => d * Math.PI / 180;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const a = Math.sin(dLat / 2) ** 2 +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+              Math.sin(dLon / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
@@ -74,13 +76,18 @@
 
   function iconFor(catId) {
     const color = COLORS[catId] || '#f59e0b';
-    const svg = encodeURIComponent(
-      `<svg xmlns='http://www.w3.org/2000/svg' width='30' height='42' viewBox='0 0 30 42'>
+    const svg = encodeURIComponent(`
+      <svg xmlns='http://www.w3.org/2000/svg' width='30' height='42' viewBox='0 0 30 42'>
         <path d='M15 0C6.7 0 0 6.7 0 15c0 10.5 15 27 15 27s15-16.5 15-27C30 6.7 23.3 0 15 0z' fill='${color}'/>
         <circle cx='15' cy='15' r='6' fill='#0b1220'/>
-      </svg>`
-    );
-    return L.icon({ iconUrl: `data:image/svg+xml,${svg}`, iconSize: [24, 34], iconAnchor: [12, 34], popupAnchor: [0, -28] });
+      </svg>
+    `);
+    return L.icon({
+      iconUrl: `data:image/svg+xml,${svg}`,
+      iconSize: [24, 34],
+      iconAnchor: [12, 34],
+      popupAnchor: [0, -28]
+    });
   }
 
   function buildOverpassQuery(lat, lng, radius, activeCatIds) {
@@ -126,10 +133,12 @@
       iconUrl: `data:image/svg+xml,${encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#facc15" stroke="#000" stroke-width="1.5">
           <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>
-        </svg>`)}`
+        </svg>`)}`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -28]
     })
-  })
-    .addTo(map)
+  }).addTo(map)
     .bindPopup(homeLabel)
     .openPopup();
 
@@ -149,11 +158,10 @@
       const row = document.createElement('div');
       row.className = 'item';
       const left = document.createElement('div');
-      const right = document.createElement('div'); right.className = 'actions';
+      const right = document.createElement('div');
+      right.className = 'actions';
       left.innerHTML = `<h3>${it.name}</h3><div class="meta">${categoryLabel(it.catId)} · ${(it.dist / 1000).toFixed(2)} km</div>`;
-      right.innerHTML = `
-        <a href="https://maps.google.com/?q=${it.lat},${it.lng}" target="_blank">Maps</a>
-      `;
+      right.innerHTML = `<a href="https://maps.google.com/?q=${it.lat},${it.lng}" target="_blank">Maps</a>`;
       row.appendChild(left);
       row.appendChild(right);
       listDiv.appendChild(row);
@@ -167,7 +175,6 @@
     const ll = L.latLng(center.lat, center.lng);
     const r = FIXED_RADIUS;
     resultsLayer.clearLayers();
-    listDiv.innerHTML = `<div class="item"><span>Buscando…</span></div>`;
 
     if (searchCircle) map.removeLayer(searchCircle);
     searchCircle = L.circle(ll, {
@@ -178,8 +185,8 @@
       fillOpacity: 0.10
     }).addTo(map);
 
-    if (toggleArea && !toggleArea.checked) map.removeLayer(searchCircle);
-    else map.fitBounds(searchCircle.getBounds(), { padding: [20, 20] });
+    map.fitBounds(searchCircle.getBounds(), { padding: [20, 20] });
+
 
     try {
       const query = buildOverpassQuery(ll.lat, ll.lng, r, activeCats);
@@ -190,7 +197,7 @@
       });
       const json = await res.json();
       const elements = json.elements || [];
-      const items = [];
+
       for (const el of elements) {
         const pos = featureToLatLng(el);
         if (!pos) continue;
@@ -199,25 +206,25 @@
         const catId = guessCategory(el.tags || {});
         if (!activeCats.includes(catId)) continue;
         const dist = haversine(ll.lat, ll.lng, y, x);
-        const mk = L.marker([y, x], { icon: iconFor(catId) })
-          .bindPopup(`<b>${name}</b><br>${categoryLabel(catId)}<br>${dist.toFixed(0)} m`);
-        resultsLayer.addLayer(mk);
-        items.push({ name, catId, dist, lat: y, lng: x });
+
+        L.marker([y, x], { icon: iconFor(catId) })
+          .bindPopup(`<b>${name}</b><br>${categoryLabel(catId)}<br>${dist.toFixed(0)} m`)
+          .addTo(resultsLayer);
       }
-      items.sort((a, b) => a.dist - b.dist);
-      renderList(items);
     } catch (err) {
-      console.error(err);
-      listDiv.innerHTML = `<div class="item"><span>Error al consultar Overpass.</span></div>`;
+      console.error("Error Overpass:", err);
     }
   }
+
 
   // =========================
   //  Eventos
   // =========================
   catCheckboxes.forEach(cb => {
     cb.addEventListener('change', () => {
-      activeCats = Array.from(catCheckboxes).filter(x => x.checked).map(x => x.value);
+      activeCats = Array.from(catCheckboxes)
+        .filter(x => x.checked)
+        .map(x => x.value);
       search(); // búsqueda automática
     });
   });

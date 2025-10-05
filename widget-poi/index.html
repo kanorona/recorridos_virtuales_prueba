@@ -4,79 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Widget Lugares Cercanos (OSM)</title>
+
+  <!-- Leaflet CSS -->
   <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
   />
+
+  <!-- Estilos propios -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="app">
+    <!-- ===== ENCABEZADO ===== -->
     <header class="app-header">
-      <h1>🧭 Lugares cercanos</h1>
-      <div class="coords">
-        Lat: <span id="latLbl">—</span> · Lng: <span id="lngLbl">—</span> · Radio: <span id="radiusLbl">—</span> m
-      </div>
+      <h1>🧭 Lugares cercanos (500 m)</h1>
+      <p>Explora los servicios disponibles alrededor de tu ubicación</p>
     </header>
 
+    <!-- ===== PANEL LATERAL ===== -->
     <aside class="sidebar">
-      <div class="controls">
-        <div class="row">
-          <label>Radio de búsqueda] (m)</label>
-          <input id="radius" type="number" placeholder="1500" />
-          <button id="search" class="btn" disabled>Buscar</button>
-        </div>
-        <div class="row categories">
-          <label><input type="checkbox" value="school" checked><span>Escuelas/Colegios</span></label>
-          <label><input type="checkbox" value="university" checked><span>Universidades</span></label>
-          <label><input type="checkbox" value="park" checked><span>Parques</span></label>
-          <label><input type="checkbox" value="mall" checked><span>Centros comerciales</span></label>
-          <label><input type="checkbox" value="hospital" checked><span>Hospitales</span></label>
-          <label><input type="checkbox" value="clinic" checked><span>Clínicas</span></label>
-          <label><input type="checkbox" value="pharmacy" checked><span>Farmacias</span></label>
-          <label><input type="checkbox" value="supermarket" checked><span>Super/Tiendas</span></label>
-          <label><input type="checkbox" value="bus_stop" checked><span>Paradas de bus</span></label>
+      
 
-        </div>
-
-
-       
+      <div class="row categories">
+        <label><input type="checkbox" value="school" checked><span>Escuelas/Colegios</span></label>
+        <label><input type="checkbox" value="university" checked><span>Universidades</span></label>
+        <label><input type="checkbox" value="park" checked><span>Parques</span></label>
+        <label><input type="checkbox" value="mall" checked><span>Centros comerciales</span></label>
+        <label><input type="checkbox" value="hospital" checked><span>Hospitales</span></label>
+        <label><input type="checkbox" value="clinic" checked><span>Clínicas</span></label>
+        <label><input type="checkbox" value="pharmacy" checked><span>Farmacias</span></label>
+        <label><input type="checkbox" value="supermarket" checked><span>Super/Tiendas</span></label>
+        <label><input type="checkbox" value="bus_stop" checked><span>Paradas de bus</span></label>
       </div>
 
-      <div id="list">
-        <div class="item">
-          <div>
-            <h3>Ejemplo (placeholder)</h3>
-            <div class="meta">Categoría · 0.00 km</div>
-          </div>
-          <div class="actions">
-            <a href="#">OSM</a> · <a href="#">Maps</a>
-          </div>
-        </div>
-        <div class="item"><em>Aquí aparecerán los resultados…</em></div>
-      </div>
-
-      <div class="footer">
-        Fuente: OpenStreetMap — © Colaboradores de OSM (ODbL)
-      </div>
     </aside>
 
+    <!-- ===== MAPA PRINCIPAL ===== -->
     <main id="map"></main>
   </div>
 
-  <!-- Tu lógica -->
-  <script src="app.js"></script>
-  <!-- Leaflet JS (después de app.js está bien) -->
+  <!-- ===== SCRIPTS ===== -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-
   <script src="app.js"></script>
-
 </body>
 </html>
-
