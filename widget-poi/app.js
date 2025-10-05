@@ -108,9 +108,7 @@
   // =========================
   //  Referencias de UI
   // =========================
-  const listDiv = document.getElementById("list");
   const catCheckboxes = document.querySelectorAll('.categories input[type="checkbox"]');
-  const toggleArea = document.getElementById("toggleArea");
 
   // =========================
   //  Mapa
@@ -146,29 +144,6 @@
   let searchCircle = null;
 
   // =========================
-  //  Render de lista
-  // =========================
-  function renderList(items) {
-    if (!items.length) {
-      listDiv.innerHTML = `<div class="item"><em>0 resultados.</em></div>`;
-      return;
-    }
-    listDiv.innerHTML = '';
-    items.forEach(it => {
-      const row = document.createElement('div');
-      row.className = 'item';
-      const left = document.createElement('div');
-      const right = document.createElement('div');
-      right.className = 'actions';
-      left.innerHTML = `<h3>${it.name}</h3><div class="meta">${categoryLabel(it.catId)} · ${(it.dist / 1000).toFixed(2)} km</div>`;
-      right.innerHTML = `<a href="https://maps.google.com/?q=${it.lat},${it.lng}" target="_blank">Maps</a>`;
-      row.appendChild(left);
-      row.appendChild(right);
-      listDiv.appendChild(row);
-    });
-  }
-
-  // =========================
   //  Búsqueda Overpass
   // =========================
   async function search() {
@@ -186,7 +161,6 @@
     }).addTo(map);
 
     map.fitBounds(searchCircle.getBounds(), { padding: [20, 20] });
-
 
     try {
       const query = buildOverpassQuery(ll.lat, ll.lng, r, activeCats);
@@ -216,7 +190,6 @@
     }
   }
 
-
   // =========================
   //  Eventos
   // =========================
@@ -225,7 +198,7 @@
       activeCats = Array.from(catCheckboxes)
         .filter(x => x.checked)
         .map(x => x.value);
-      search(); // búsqueda automática
+      search();
     });
   });
 
